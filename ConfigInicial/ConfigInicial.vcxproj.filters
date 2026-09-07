@@ -13,12 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Archivos de origen\shader">
-      <UniqueIdentifier>{0f0d858b-739f-47d3-b4b1-f36a40f93e2a}</UniqueIdentifier>
+    <Filter Include="Archivos de origen\Shaders">
+      <UniqueIdentifier>{a99b001c-2bf8-42a0-9673-0196f5c5bdfd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="practica2_Rafael_Ortiz.cpp">
+    <ClCompile Include="Practica3_Rafael_Ortiz.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,10 +29,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\core.frag">
-      <Filter>Archivos de origen\shader</Filter>
+      <Filter>Archivos de origen\Shaders</Filter>
     </None>
     <None Include="Shader\core.vs">
-      <Filter>Archivos de origen\shader</Filter>
+      <Filter>Archivos de origen\Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

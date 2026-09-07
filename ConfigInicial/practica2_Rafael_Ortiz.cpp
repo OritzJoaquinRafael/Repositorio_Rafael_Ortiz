@@ -1,6 +1,5 @@
 // Práctica 2
 // Ortiz Valles Joaquin Rafael
-// Archivo: practica2_Rafael_Ortiz.cpp
 // Fecha de entrega: 30/08/2026
 // Número de cuenta: 319071616
 
@@ -34,7 +33,7 @@ int mapa[14][14] = {
 
 int main() {
     glfwInit();
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Práctica 2 - Ortiz Valles Joaquin Rafael", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 2 - Ortiz Valles Joaquin Rafael", NULL, NULL);
     glfwSetFramebufferSizeCallback(window, resize);
 
     if (window == NULL) {
