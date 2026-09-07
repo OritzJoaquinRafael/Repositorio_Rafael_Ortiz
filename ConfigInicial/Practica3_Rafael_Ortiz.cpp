@@ -35,6 +35,7 @@ int main() {
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "Práctica 3 - Ortiz Valles Joaquin Rafael", nullptr, nullptr);
+	//a
 
 	int screenWidth, screenHeight;
 
