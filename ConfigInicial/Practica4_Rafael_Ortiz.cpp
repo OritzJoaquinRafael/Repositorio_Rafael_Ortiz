@@ -1,6 +1,6 @@
-// Previo 4
+// Practica 5
 // Ortiz Valles Joaquin Rafael
-// Fecha de entrega: 08/09/2026
+// Fecha de entrega: 09/09/2026
 // Número de cuenta: 319071616
 
 #include<iostream>
@@ -83,55 +83,96 @@ int main() {
 
 	// Set up vertex data (and buffer(s)) and attribute pointers
 
-	
 
 	// use with Perspective Projection
 	float vertices[] = {
-		-0.5f, -0.5f, 0.5f, 1.0f, 0.0f,0.0f,//Front
-		0.5f, -0.5f, 0.5f,  1.0f, 0.0f,0.0f,
-		0.5f,  0.5f, 0.5f,  1.0f, 0.0f,0.0f,
-		0.5f,  0.5f, 0.5f,  1.0f, 0.0f,0.0f,
-		-0.5f,  0.5f, 0.5f, 1.0f, 0.0f,0.0f,
-		-0.5f, -0.5f, 0.5f, 1.0f, 0.0f,0.0f,
-		
-	    -0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,//Back
-		 0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-		 0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-		 0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-	    -0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-	    -0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-		
-		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 0.0f,1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f, 0.0f,1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f, 0.0f,1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f, 0.0f,1.0f,
-		 0.5f,  -0.5f, 0.5f, 0.0f, 0.0f,1.0f,
-      
-		-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,
-		-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,0.0f,
-		-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,0.0f,
-		-0.5f, -0.5f,  0.5f,  1.0f, 1.0f,0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,
-		
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, 1.0f,1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, 1.0f,1.0f,
-		-0.5f, -0.5f,  0.5f, 0.0f, 1.0f,1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,1.0f,
-		
-		-0.5f,  0.5f, -0.5f, 1.0f, 0.2f,0.5f,
-		0.5f,  0.5f, -0.5f,  1.0f, 0.2f,0.5f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.2f,0.5f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.2f,0.5f,
-		-0.5f,  0.5f,  0.5f, 1.0f, 0.2f,0.5f,
-		-0.5f,  0.5f, -0.5f, 1.0f, 0.2f,0.5f,
+		-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f, // Front
+		 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+
+		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f, // Back
+		 0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+
+		 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f, // Right
+		 0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+
+		-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f, // Left
+		-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+
+		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f, // Bottom
+		 0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f, // Top
+		 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+		-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
 	};
 
+	////// use with Perspective Projection
+	//float vertices_1[] = {
+	//	-0.5f, -0.5f, 0.5f, 1.0f, 0.0f,0.0f,//Front
+	//	0.5f, -0.5f, 0.5f,  1.0f, 0.0f,0.0f,
+	//	0.5f,  0.5f, 0.5f,  1.0f, 0.0f,0.0f,
+	//	0.5f,  0.5f, 0.5f,  1.0f, 0.0f,0.0f,
+	//	-0.5f,  0.5f, 0.5f, 1.0f, 0.0f,0.0f,
+	//	-0.5f, -0.5f, 0.5f, 1.0f, 0.0f,0.0f,
 
+	//	-0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,//Back
+	//	 0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,
+	//	 0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
+	//	 0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
+	//	-0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
+	//	-0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,
 
+	//	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,1.0f,
+	//	 0.5f, -0.5f, -0.5f,  0.0f, 0.0f,1.0f,
+	//	 0.5f,  0.5f, -0.5f,  0.0f, 0.0f,1.0f,
+	//	 0.5f,  0.5f, -0.5f,  0.0f, 0.0f,1.0f,
+	//	 0.5f,  0.5f,  0.5f,  0.0f, 0.0f,1.0f,
+	//	 0.5f,  -0.5f, 0.5f, 0.0f, 0.0f,1.0f,
+
+	//	-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,
+	//	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,
+	//	-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,0.0f,
+	//	-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,0.0f,
+	//	-0.5f, -0.5f,  0.5f,  1.0f, 1.0f,0.0f,
+	//	-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,
+
+	//	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,1.0f,
+	//	0.5f, -0.5f, -0.5f,  0.0f, 1.0f,1.0f,
+	//	0.5f, -0.5f,  0.5f,  0.0f, 1.0f,1.0f,
+	//	0.5f, -0.5f,  0.5f,  0.0f, 1.0f,1.0f,
+	//	-0.5f, -0.5f,  0.5f, 0.0f, 1.0f,1.0f,
+	//	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,1.0f,
+
+	//	-0.5f,  0.5f, -0.5f, 1.0f, 0.2f,0.5f,
+	//	0.5f,  0.5f, -0.5f,  1.0f, 0.2f,0.5f,
+	//	0.5f,  0.5f,  0.5f,  1.0f, 0.2f,0.5f,
+	//	0.5f,  0.5f,  0.5f,  1.0f, 0.2f,0.5f,
+	//	-0.5f,  0.5f,  0.5f, 1.0f, 0.2f,0.5f,
+	//	-0.5f,  0.5f, -0.5f, 1.0f, 0.2f,0.5f,
+	//};
 
 	GLuint VBO, VAO;
 	glGenVertexArrays(1, &VAO);
@@ -144,6 +185,9 @@ int main() {
 	//2.- Copiamos nuestros arreglo de vertices en un buffer de vertices para que OpenGL lo use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_1), vertices_1, GL_STATIC_DRAW);
 	// 3.Copiamos nuestro arreglo de indices en  un elemento del buffer para que OpenGL lo use
 	/*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
@@ -202,42 +246,62 @@ int main() {
 
 		glBindVertexArray(VAO);
 
-
+		//Cuerpo
 		model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(4.0f, 0.1f, 1.0f)); // Ancho, grosor, profundidad
+		model = glm::scale(model, glm::vec3(1.0f, 1.2f, 0.4f)); // Ancho, grosor, profundidad
 		model = glm::translate(model, glm::vec3(0.0f, 0.6f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// Pata 1
+		// Pierna Izquierda
 		model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(0.1f, 0.4f, 0.2f)); // Tamaño de la pata
-		model = glm::translate(model, glm::vec3(18.0f, -0.4f, 1.9f)); // Posiciona la pata
+		model = glm::scale(model, glm::vec3(0.2f, 0.5f, 0.2f)); // Tamaño de la pata
+		model = glm::translate(model, glm::vec3(1.0f, -0.4f, 0.0f)); // Posiciona la pata
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// Pata 2
+		// Pierna Derecha
 		model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(0.1f, 0.4f, 0.2f));
-		model = glm::translate(model, glm::vec3(-18.0f, -0.4f, 1.9f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.5f, 0.2f));
+		model = glm::translate(model, glm::vec3(-1.0f, -0.4f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// Pata 3
+		// Entrepierna
 		model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(0.1f, 0.4f, 0.2f));
-		model = glm::translate(model, glm::vec3(-18.0f, -0.4f, -1.9f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.3f, 0.2f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// Pata 4
+		// brazo izquierdo
 		model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(0.1f, 0.4f, 0.2f));
-		model = glm::translate(model, glm::vec3(18.0f, -0.4f, -1.9f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.6f, 0.2f));
+		model = glm::translate(model, glm::vec3(-6.0f, 0.5f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
+		// brazo derecho
+		model = glm::mat4(1.0f);
+		model = glm::scale(model, glm::vec3(0.1f, 0.6f, 0.2f));
+		model = glm::translate(model, glm::vec3(6.0f, 0.5f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		
+		// Pie derecho
+		model = glm::mat4(1.0f);
+		model = glm::scale(model, glm::vec3(0.2f, 0.1f, 0.3f));
+		model = glm::translate(model, glm::vec3(-1.0f, -5.0f, 0.1f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		// Pie izquierdo
+		model = glm::mat4(1.0f);
+		model = glm::scale(model, glm::vec3(0.2f, 0.1f, 0.3f));
+		model = glm::translate(model, glm::vec3(1.0f, -5.0f, 0.1f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
 		glBindVertexArray(0);
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
@@ -259,9 +323,9 @@ int main() {
 	 if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		 movX -= 0.01f;
 	 if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
-		 movY += 0.01f;
+		 movY += 0.001f;
 	 if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
-		 movY -= 0.01f;
+		 movY -= 0.001f;
 	 if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		 movZ -= 0.01f;
 	 if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)

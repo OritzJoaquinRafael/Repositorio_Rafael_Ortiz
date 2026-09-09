@@ -18,7 +18,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Previo4_Rafael_Ortiz.cpp">
+    <ClCompile Include="Practica4_Rafael_Ortiz.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
