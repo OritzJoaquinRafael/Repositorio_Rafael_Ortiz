@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main_Modelado.cpp" />
+    <ClCompile Include="Previo4_Rafael_Ortiz.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\core.frag" />
