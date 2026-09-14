@@ -1,10 +1,10 @@
-//// Practica 4
+//// Práctica 4
 // Ortiz Valles Joaquin Rafael
-// Fecha de entrega: 09/09/2026
+// Fecha de entrega: 13/09/2026
 // Número de cuenta: 319071616
 
 #include<iostream>
-#include <cmath> // Necesario para calcular los vértices del círculo
+#include <cmath>
 
 //#define GLEW_STATIC
 
@@ -104,7 +104,7 @@ int main() {
 
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Previo 4 - Ortiz Valles Joaquin Rafael", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 4 - Ortiz Valles Joaquin Rafael", nullptr, nullptr);
 
 	int screenWidth, screenHeight;
 
@@ -284,8 +284,8 @@ int main() {
 
 		// 3. Rectángulo Gris 1
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.4f, 0.2f, 0.3f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f)); 
+		model = glm::translate(model, glm::vec3(-0.2f, 0.27f, 0.21f));
+		model = glm::scale(model, glm::vec3(0.4f, 0.1f, 0.1f)); 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -308,40 +308,40 @@ int main() {
 		// 6. Rectángulo Amarillo 1
 		glUniform3f(colorLoc, 1.0f, 1.0f, 0.0f); // Amarillo
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		model = glm::translate(model, glm::vec3(-0.2f, 0.16f, 0.2f));
+		model = glm::scale(model, glm::vec3(0.18f, 0.03f, 0.03f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		// 7. Rectángulo Amarillo 2
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(3.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		model = glm::translate(model, glm::vec3(-0.2f, 0.16f, 0.2f));
+		model = glm::scale(model, glm::vec3(0.03f, 0.1f, 0.03f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		// 8. Triángulo Azul
-		glBindVertexArray(VAO_Tri); // ¡Cambio al VAO del Triángulo!
+		glBindVertexArray(VAO_Tri); 
 		glUniform3f(colorLoc, 0.0f, 0.0f, 1.0f); // Azul fuerte
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, -2.5f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		model = glm::translate(model, glm::vec3(0.1f, 0.3f, 0.21f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.2f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 3); // Ojo, solo son 3 vértices
+		glDrawArrays(GL_TRIANGLES, 0, 3); // solo son 3 vértices
 
 		// 9. Círculo Verde 1
-		glBindVertexArray(VAO_Cir); // ¡Cambio al VAO del Círculo!
+		glBindVertexArray(VAO_Cir);
 		glUniform3f(colorLoc, 0.0f, 1.0f, 0.0f); // Verde
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-3.0f, -2.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		model = glm::translate(model, glm::vec3(0.25f, 0.24f, 0.21f));
+		model = glm::scale(model, glm::vec3(0.19f, 0.19f, 0.19f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLE_FAN, 0, numSegmentos + 2); // Dibujamos con formato de abanico
+		glDrawArrays(GL_TRIANGLE_FAN, 0, numSegmentos + 2);
 
 		// 10. Círculo Verde 2
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(3.0f, -2.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		model = glm::translate(model, glm::vec3(0.4f, 0.3f, 0.21f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLE_FAN, 0, numSegmentos + 2);
 
