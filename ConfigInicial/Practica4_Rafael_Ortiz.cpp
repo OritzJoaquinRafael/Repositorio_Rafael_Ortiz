@@ -1,9 +1,10 @@
-// Practica 5
+//// Practica 4
 // Ortiz Valles Joaquin Rafael
 // Fecha de entrega: 09/09/2026
 // Número de cuenta: 319071616
 
 #include<iostream>
+#include <cmath> // Necesario para calcular los vértices del círculo
 
 //#define GLEW_STATIC
 
@@ -15,37 +16,100 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
-
 // Shaders
 #include "Shader.h"
 
-void Inputs(GLFWwindow *window);
-
+void Inputs(GLFWwindow* window);
 
 const GLint WIDTH = 800, HEIGHT = 600;
-float movX=0.0f;
-float movY=0.0f;
-float movZ=-5.0f;
+float movX = 0.0f;
+float movY = 0.0f;
+float movZ = -5.0f;
 float rot = 0.0f;
+
+// use with Perspective Projection
+float vertices[] = {
+	-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f, // Front
+	 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+
+	-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f, // Back
+	 0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+
+	 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f, // Right
+	 0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+
+	-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f, // Left
+	-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+
+	-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f, // Bottom
+	 0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+
+	-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f, // Top
+	 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
+	-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
+};
+
+
+// Vértices para el Triángulo
+float verticesTriangulo[] = {
+	 0.0f,  0.5f, 0.0f,    1.0f, 1.0f, 1.0f, // Arriba
+	-0.5f, -0.5f, 0.0f,    1.0f, 1.0f, 1.0f, // Izquierda
+	 0.5f, -0.5f, 0.0f,    1.0f, 1.0f, 1.0f  // Derecha
+};
+
+// Vértices y para el Círculo
+const int numSegmentos = 36;
+float verticesCirculo[(numSegmentos + 2) * 6];
+
+void generarCirculo() {
+	verticesCirculo[0] = 0.0f; verticesCirculo[1] = 0.0f; verticesCirculo[2] = 0.0f;
+	verticesCirculo[3] = 1.0f; verticesCirculo[4] = 1.0f; verticesCirculo[5] = 1.0f;
+	for (int i = 0; i <= numSegmentos; i++) {
+		float angulo = i * 2.0f * 3.14159f / numSegmentos;
+		int idx = (i + 1) * 6;
+		verticesCirculo[idx] = cos(angulo) * 0.5f;     // X
+		verticesCirculo[idx + 1] = sin(angulo) * 0.5f; // Y
+		verticesCirculo[idx + 2] = 0.0f;               // Z
+		verticesCirculo[idx + 3] = 1.0f;               // R
+		verticesCirculo[idx + 4] = 1.0f;               // G
+		verticesCirculo[idx + 5] = 1.0f;               // B
+	}
+}
+
 int main() {
 	glfwInit();
-	//Verificación de compatibilidad 0
-	// Set all the required options for GLFW
-	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);*/
 
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "Previo 4 - Ortiz Valles Joaquin Rafael", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Previo 4 - Ortiz Valles Joaquin Rafael", nullptr, nullptr);
 
 	int screenWidth, screenHeight;
 
 	glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
 
-	//Verificación de errores de creacion  ventana
 	if (nullptr == window)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -57,7 +121,6 @@ int main() {
 	glfwMakeContextCurrent(window);
 	glewExperimental = GL_TRUE;
 
-	//Verificación de errores de inicialización de glew
 
 	if (GLEW_OK != glewInit()) {
 		std::cout << "Failed to initialise GLEW" << std::endl;
@@ -65,7 +128,7 @@ int main() {
 	}
 
 
-	// Define las dimensiones del viewport
+	//  Dimensiones del viewport
 	glViewport(0, 0, screenWidth, screenHeight);
 
 
@@ -81,182 +144,84 @@ int main() {
 	Shader ourShader("Shader/core.vs", "Shader/core.frag");
 
 
-	// Set up vertex data (and buffer(s)) and attribute pointers
+	generarCirculo(); 
 
+	GLuint VBO, VAO;          // Cubos y rectángulos
+	GLuint VBO_Tri, VAO_Tri;  // Triángulos
+	GLuint VBO_Cir, VAO_Cir;  // Círculos
 
-	// use with Perspective Projection
-	float vertices[] = {
-		-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f, // Front
-		 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-
-		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f, // Back
-		 0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-
-		 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f, // Right
-		 0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-
-		-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f, // Left
-		-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-
-		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f, // Bottom
-		 0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f, -0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-
-		-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f, // Top
-		 0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		 0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f,  0.5f,  0.5f, 0.5f, 0.8f, 1.0f,
-		-0.5f,  0.5f, -0.5f, 0.5f, 0.8f, 1.0f,
-	};
-
-	////// use with Perspective Projection
-	//float vertices_1[] = {
-	//	-0.5f, -0.5f, 0.5f, 1.0f, 0.0f,0.0f,//Front
-	//	0.5f, -0.5f, 0.5f,  1.0f, 0.0f,0.0f,
-	//	0.5f,  0.5f, 0.5f,  1.0f, 0.0f,0.0f,
-	//	0.5f,  0.5f, 0.5f,  1.0f, 0.0f,0.0f,
-	//	-0.5f,  0.5f, 0.5f, 1.0f, 0.0f,0.0f,
-	//	-0.5f, -0.5f, 0.5f, 1.0f, 0.0f,0.0f,
-
-	//	-0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,//Back
-	//	 0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-	//	 0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-	//	 0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-	//	-0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-	//	-0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-
-	//	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,1.0f,
-	//	 0.5f, -0.5f, -0.5f,  0.0f, 0.0f,1.0f,
-	//	 0.5f,  0.5f, -0.5f,  0.0f, 0.0f,1.0f,
-	//	 0.5f,  0.5f, -0.5f,  0.0f, 0.0f,1.0f,
-	//	 0.5f,  0.5f,  0.5f,  0.0f, 0.0f,1.0f,
-	//	 0.5f,  -0.5f, 0.5f, 0.0f, 0.0f,1.0f,
-
-	//	-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,
-	//	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,
-	//	-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,0.0f,
-	//	-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,0.0f,
-	//	-0.5f, -0.5f,  0.5f,  1.0f, 1.0f,0.0f,
-	//	-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,
-
-	//	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,1.0f,
-	//	0.5f, -0.5f, -0.5f,  0.0f, 1.0f,1.0f,
-	//	0.5f, -0.5f,  0.5f,  0.0f, 1.0f,1.0f,
-	//	0.5f, -0.5f,  0.5f,  0.0f, 1.0f,1.0f,
-	//	-0.5f, -0.5f,  0.5f, 0.0f, 1.0f,1.0f,
-	//	-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,1.0f,
-
-	//	-0.5f,  0.5f, -0.5f, 1.0f, 0.2f,0.5f,
-	//	0.5f,  0.5f, -0.5f,  1.0f, 0.2f,0.5f,
-	//	0.5f,  0.5f,  0.5f,  1.0f, 0.2f,0.5f,
-	//	0.5f,  0.5f,  0.5f,  1.0f, 0.2f,0.5f,
-	//	-0.5f,  0.5f,  0.5f, 1.0f, 0.2f,0.5f,
-	//	-0.5f,  0.5f, -0.5f, 1.0f, 0.2f,0.5f,
-	//};
-
-	GLuint VBO, VAO;
+	// 1. VAO del Cubo original
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	//glGenBuffers(1, &EBO);
-
-	// Enlazar  Vertex Array Object
 	glBindVertexArray(VAO);
-
-	//2.- Copiamos nuestros arreglo de vertices en un buffer de vertices para que OpenGL lo use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_1), vertices_1, GL_STATIC_DRAW);
-	// 3.Copiamos nuestro arreglo de indices en  un elemento del buffer para que OpenGL lo use
-	/*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
-
-	// 4. Despues colocamos las caracteristicas de los vertices
-
-	//Posicion
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
 
-	//Color
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
+	// 2. VAO del Triángulo
+	glGenVertexArrays(1, &VAO_Tri);
+	glGenBuffers(1, &VBO_Tri);
+	glBindVertexArray(VAO_Tri);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_Tri);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesTriangulo), verticesTriangulo, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	// 3. VAO del Círculo
+	glGenVertexArrays(1, &VAO_Cir);
+	glGenBuffers(1, &VBO_Cir);
+	glBindVertexArray(VAO_Cir);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_Cir);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesCirculo), verticesCirculo, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
 
 
-	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs)
+	glm::mat4 projection = glm::mat4(1);
+	projection = glm::perspective(glm::radians(45.0f), (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 100.0f);
 
-	
-	glm::mat4 projection=glm::mat4(1);
-
-	projection = glm::perspective(glm::radians(45.0f), (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 100.0f);//FOV, Radio de aspecto,znear,zfar
-	//projection = glm::ortho(0.0f, (GLfloat)screenWidth, 0.0f, (GLfloat)screenHeight, 0.1f, 1000.0f);//Izq,Der,Fondo,Alto,Cercania,Lejania
 	while (!glfwWindowShouldClose(window))
 	{
-		
 		Inputs(window);
-		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 
-		// Render
 		// Clear the colorbuffer
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-		// Draw our first triangle
 		ourShader.Use();
-		glm::mat4 model=glm::mat4(1);
-		glm::mat4 view=glm::mat4(1);
-	
+		glm::mat4 model = glm::mat4(1);
+		glm::mat4 view = glm::mat4(1);
 
-		view = glm::translate(view, glm::vec3(movX,movY, movZ));
+		view = glm::translate(view, glm::vec3(movX, movY, movZ));
 		view = glm::rotate(view, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		GLint modelLoc = glGetUniformLocation(ourShader.Program, "model");
 		GLint viewLoc = glGetUniformLocation(ourShader.Program, "view");
 		GLint projecLoc = glGetUniformLocation(ourShader.Program, "projection");
-
+		GLint colorLoc = glGetUniformLocation(ourShader.Program, "colorFigura"); // Nuevo Uniform para color
 
 		glUniformMatrix4fv(projecLoc, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	
 
 		glBindVertexArray(VAO);
+		glUniform3f(colorLoc, 0.5f, 0.8f, 1.0f); // Le aplicamos su color azulito original 
 
-		//Cuerpo
+		// Cuerpo
 		model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(1.0f, 1.2f, 0.4f)); // Ancho, grosor, profundidad
+		model = glm::scale(model, glm::vec3(1.0f, 1.2f, 0.4f));
 		model = glm::translate(model, glm::vec3(0.0f, 0.6f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		// Pierna Izquierda
 		model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(0.2f, 0.5f, 0.2f)); // Tamaño de la pata
-		model = glm::translate(model, glm::vec3(1.0f, -0.4f, 0.0f)); // Posiciona la pata
+		model = glm::scale(model, glm::vec3(0.2f, 0.5f, 0.2f));
+		model = glm::translate(model, glm::vec3(1.0f, -0.4f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -274,20 +239,20 @@ int main() {
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// brazo izquierdo
+		// Brazo izquierdo
 		model = glm::mat4(1.0f);
 		model = glm::scale(model, glm::vec3(0.1f, 0.6f, 0.2f));
 		model = glm::translate(model, glm::vec3(-6.0f, 0.5f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// brazo derecho
+		// Brazo derecho
 		model = glm::mat4(1.0f);
 		model = glm::scale(model, glm::vec3(0.1f, 0.6f, 0.2f));
 		model = glm::translate(model, glm::vec3(6.0f, 0.5f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		
+
 		// Pie derecho
 		model = glm::mat4(1.0f);
 		model = glm::scale(model, glm::vec3(0.2f, 0.1f, 0.3f));
@@ -302,38 +267,118 @@ int main() {
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
+		// 1. Cuadro Gris 1
+		glUniform3f(colorLoc, 0.5f, 0.5f, 0.5f); // Gris
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.2f, 0.9f, 0.3f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		// 2. Cuadro Gris 2
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-0.2f, 0.9f, 0.3f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		// 3. Rectángulo Gris 1
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.4f, 0.2f, 0.3f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f)); 
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		// 4. Cuadro más azul claro
+		glUniform3f(colorLoc, 0.6f, 0.9f, 1.0f); // Azul muy claro
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.8f, 0.2f));
+		model = glm::scale(model, glm::vec3(0.7f, 0.8f, 0.2f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		// 5. Otro Rectángulo Gris
+		glUniform3f(colorLoc, 0.5f, 0.5f, 0.5f); // Gris
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.6f, 0.3f));
+		model = glm::scale(model, glm::vec3(0.6f, 0.1f, 0.1f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		// 6. Rectángulo Amarillo 1
+		glUniform3f(colorLoc, 1.0f, 1.0f, 0.0f); // Amarillo
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		// 7. Rectángulo Amarillo 2
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(3.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		// 8. Triángulo Azul
+		glBindVertexArray(VAO_Tri); // ¡Cambio al VAO del Triángulo!
+		glUniform3f(colorLoc, 0.0f, 0.0f, 1.0f); // Azul fuerte
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, -2.5f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 3); // Ojo, solo son 3 vértices
+
+		// 9. Círculo Verde 1
+		glBindVertexArray(VAO_Cir); // ¡Cambio al VAO del Círculo!
+		glUniform3f(colorLoc, 0.0f, 1.0f, 0.0f); // Verde
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-3.0f, -2.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLE_FAN, 0, numSegmentos + 2); // Dibujamos con formato de abanico
+
+		// 10. Círculo Verde 2
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(3.0f, -2.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLE_FAN, 0, numSegmentos + 2);
+
+
 		glBindVertexArray(0);
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
-	
 	}
+
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-
+	glDeleteVertexArrays(1, &VAO_Tri);
+	glDeleteBuffers(1, &VBO_Tri);
+	glDeleteVertexArrays(1, &VAO_Cir);
+	glDeleteBuffers(1, &VBO_Cir);
 
 	glfwTerminate();
 	return EXIT_SUCCESS;
- }
+}
 
- void Inputs(GLFWwindow *window) {
-	 if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  //GLFW_RELEASE
-		 glfwSetWindowShouldClose(window, true);
-	 if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		 movX += 0.01f;
-	 if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		 movX -= 0.01f;
-	 if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
-		 movY += 0.001f;
-	 if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
-		 movY -= 0.001f;
-	 if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		 movZ -= 0.01f;
-	 if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		 movZ += 0.01f;
-	 if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		 rot += 0.1f;
-	 if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		 rot -= 0.1f;
- }
-
-
+void Inputs(GLFWwindow* window) {
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  //GLFW_RELEASE
+		glfwSetWindowShouldClose(window, true);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		movX += 0.01f;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		movX -= 0.01f;
+	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
+		movY += 0.001f;
+	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
+		movY -= 0.001f;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		movZ -= 0.01f;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		movZ += 0.01f;
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		rot += 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		rot -= 0.1f;
+}
