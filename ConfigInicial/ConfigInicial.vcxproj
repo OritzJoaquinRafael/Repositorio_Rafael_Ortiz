@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Practica4_Rafael_Ortiz.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Shader\core.frag" />
     <None Include="Shader\core.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Previo5_Rafael_Ortiz.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h" />

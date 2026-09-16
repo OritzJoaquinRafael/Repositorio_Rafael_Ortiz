@@ -18,17 +18,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Practica4_Rafael_Ortiz.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Shader\core.frag">
       <Filter>Archivos de origen\Shaders</Filter>
     </None>
     <None Include="Shader\core.vs">
       <Filter>Archivos de origen\Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Previo5_Rafael_Ortiz.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
