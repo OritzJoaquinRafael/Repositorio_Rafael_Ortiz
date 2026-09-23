@@ -18,21 +18,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\core.frag">
-      <Filter>Archivos de origen\Shaders</Filter>
-    </None>
-    <None Include="Shader\core.vs">
-      <Filter>Archivos de origen\Shaders</Filter>
-    </None>
+    <ClInclude Include="Camera.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Previo5_Rafael_Ortiz.cpp">
+    <ClCompile Include="Previo6_Rafael_Ortiz.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shader.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
+    <None Include="Shader\modelLoading.frag">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="Shader\modelLoading.vs">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
