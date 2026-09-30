@@ -40,7 +40,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Previo7_Rafael_Ortiz.cpp">
+    <ClCompile Include="Practica7_Rafael_Ortiz .cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
