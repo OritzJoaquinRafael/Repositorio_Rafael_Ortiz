@@ -1,4 +1,4 @@
-// Praáctica 7_
+// Práctica 7
 // Ortiz Valles Joaquin Rafael
 // Fecha de entrega: 04/10/2026
 // Número de cuenta: 319071616
@@ -26,8 +26,8 @@
 
 
 // Function prototypes
-void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
-void MouseCallback(GLFWwindow *window, double xPos, double yPos);
+void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
+void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
 
 // Window dimensions
@@ -48,7 +48,7 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
 
-							// The MAIN function, from here we start the application and run the game loop
+// The MAIN function, from here we start the application and run the game loop
 int main()
 {
 	// Init GLFW
@@ -61,7 +61,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Previo 7 - Ortiz Valles Joaquin Rafael", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 7 - Ortiz Valles Joaquin Rafael", nullptr, nullptr);
 
 	if (nullptr == window)
 	{
@@ -106,35 +106,41 @@ int main()
 	{
 		// Positions            // Colors              // Texture Coords
 
-		-0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 0.00f,
-		 0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.6666f, 0.00f,
-		 0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.6666f, 0.25f,
-		-0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 0.25f,
+		// Cara Frontal 
+		-0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.26f, 0.50f,
+		 0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.49f, 0.50f,
+		 0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.49f, 0.75f,
+		-0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.26f, 0.75f,
 
-		 0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 0.75f,
-		-0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.6666f, 0.75f,
-		-0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.6666f, 1.00f,
-		 0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 1.00f,
+		// Cara Posterior 
+		 0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.33f, 0.00f,
+		-0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.50f, 0.00f,
+		-0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.50f, 0.25f,
+		 0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 0.25f,
 
-		 -0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 0.50f,
-		  0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.6666f, 0.50f,
-		  0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.6666f, 0.75f,
-		 -0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 0.75f,
+		 // Cara Superior 
+		 -0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.25f, 0.66f,
+		  0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.50f, 0.66f,
+		  0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.50f, 1.00f,
+		 -0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.25f, 1.00f,
 
-		 -0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 0.25f,
-		  0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.6666f, 0.25f,
-		  0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.6666f, 0.50f,
-		 -0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 0.50f,
+		 // Cara Inferior
+		 -0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.25f, 0.00f,
+		  0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.50f, 0.00f,
+		  0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.50f, 0.33,
+		 -0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.25f, 0.33f,
 
+		 // Cara Izquierda
 		 -0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.0000f, 0.00f,
 		 -0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 0.00f,
 		 -0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.3333f, 0.25f,
 		 -0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.0000f, 0.25f,
 
-		  0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.6666f, 0.00f,
-		  0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      1.0000f, 0.00f,
-		  0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      1.0000f, 0.25f,
-		  0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.6666f, 0.25f
+		 // Cara Derecha
+		  0.5f, -0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.23f, 0.00f,
+		  0.5f, -0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.50f, 0.00f,
+		  0.5f,  0.5f, -0.5f,    1.0f, 1.0f, 1.0f,      0.50f, 0.25f,
+		  0.5f,  0.5f,  0.5f,    1.0f, 1.0f, 1.0f,      0.23f, 0.25f
 	};
 
 
@@ -149,7 +155,7 @@ int main()
 	};
 
 	// First, set the container's VAO (and VBO)
-	GLuint VBO, VAO,EBO;
+	GLuint VBO, VAO, EBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -162,29 +168,30 @@ int main()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 	// Color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
 	// Texture Coordinate attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)(6 * sizeof(GLfloat)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(2);
 	glBindVertexArray(0);
 
 	// Load textures
 	GLuint texture1;
 	glGenTextures(1, &texture1);
-	glBindTexture(GL_TEXTURE_2D,texture1);
-	int textureWidth, textureHeight,nrChannels;
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	int textureWidth, textureHeight, nrChannels;
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char *image;
+	unsigned char* image;
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 	// Diffuse map
-	image = stbi_load("images/die.png", &textureWidth, &textureHeight, &nrChannels,0);
+	image = stbi_load("images/die.png", &textureWidth, &textureHeight, &nrChannels, 0);
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
@@ -199,7 +206,7 @@ int main()
 	}
 	stbi_image_free(image);
 
-	
+
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -318,7 +325,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	}
 }
 
-void MouseCallback(GLFWwindow *window, double xPos, double yPos)
+void MouseCallback(GLFWwindow* window, double xPos, double yPos)
 {
 	if (firstMouse)
 	{
