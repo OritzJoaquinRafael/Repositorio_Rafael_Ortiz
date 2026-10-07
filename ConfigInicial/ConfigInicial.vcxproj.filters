@@ -38,9 +38,15 @@
     <None Include="Shader\lamp.vs">
       <Filter>Archivos de origen\Shaders</Filter>
     </None>
+    <None Include="Shader\lighting.frag">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="Shader\lighting.vs">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Practica7_Rafael_Ortiz .cpp">
+    <ClCompile Include="Previo8_Rafael_Ortiz.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
