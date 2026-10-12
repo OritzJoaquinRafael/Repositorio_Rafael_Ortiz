@@ -1,6 +1,6 @@
 // Practica 8
 // Ortiz Valles Joaquin Rafael
-// Fecha de entrega: 06/10/2026
+// Fecha de entrega: 11/10/2026
 // Número de cuenta: 319071616
 
 
@@ -117,6 +117,7 @@ int main()
     Model Ciu((char*)"Models/Residential Buildings 001.obj");
     Model Road((char*)"Models/road.obj");
     Model Ciu2((char*)"Models/Residential Buildings 002.obj");
+    Model Sun1((char*)"Models/Sun.obj");
     glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     float vertices[] = {
@@ -221,13 +222,27 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // --- MATEMÁTICA DE LA LUNA Y EL SOL ---
+        float radio = 40.0f;
+        float lunaX = radio * cos(movelightPos);
+        float lunaZ = radio * sin(movelightPos);
+        float lunaY = 4.0f;
+        glm::vec3 posicionLuna(lunaX, lunaY, lunaZ); 
+
+        float anguloSol = movelightPos + 3.14159265f;
+        float solX = radio * cos(anguloSol);
+        float solZ = radio * sin(anguloSol);
+        float solY = 4.0f; 
+        glm::vec3 posicionSol(solX, solY, solZ);
+
         
         lightingShader.Use();
         GLint lightPosLoc = glGetUniformLocation(lightingShader.Program, "light.position");
         GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
-        glUniform3f(lightPosLoc, lightPos.x + movelightPos, lightPos.y + movelightPos, lightPos.z + movelightPos);
-        glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
+        // La Luna (Luz 1 blanca) usa posicionLuna
+        glUniform3f(lightPosLoc, posicionLuna.x, posicionLuna.y, posicionLuna.z);
+        glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
         // Set lights properties
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.3f, 0.3f, 0.3f);
@@ -235,7 +250,7 @@ int main()
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 0.0f, 0.0f, 0.0f);
 
         // Set properties for light 2 (Luz rojiza)
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.position"), lightPos2.x + movelightPos2, lightPos2.y + movelightPos2, lightPos2.z + movelightPos2);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.position"), posicionSol.x, posicionSol.y, posicionSol.z);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.ambient"), 0.2f, 0.0f, 0.0f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.diffuse"), 0.8f, 0.2f, 0.2f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.specular"), 1.0f, 0.0f, 0.0f);
@@ -259,12 +274,12 @@ int main()
         glBindVertexArray(VAO);
         dog.Draw(lightingShader);
 
-        // 2. DIBUJAR LUNA
-        glm::mat4 model2(1.0f);
-        model = glm::translate(model, lightPos + movelightPos);
-        model = glm::scale(model, glm::vec3(0.3f));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        Luna.Draw(lightingShader);
+        //// 2. DIBUJAR LUNA
+        //glm::mat4 model2(1.0f);
+        //model = glm::translate(model, lightPos + movelightPos);
+        //model = glm::scale(model, glm::vec3(0.3f));
+        //glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        //Sun1.Draw(lightingShader);
 
         // 3. DIBUJAR CIUDAD
         model = glm::mat4(1.0f);
@@ -309,21 +324,27 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-        glBindVertexArray(VAO);
+        glBindVertexArray(0);
 
-        // --- Dibujo del foco de la Luz 1 ---
-        //model = glm::mat4(1.0f);
-        //model = glm::translate(model, lightPos + movelightPos);
-        //model = glm::scale(model, glm::vec3(0.3f));
-        //glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        // --- Dibujo del foco de la Luz 2 ---
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos2 + movelightPos2);
-        model = glm::scale(model, glm::vec3(0.3f));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        // --- 6. DIBUJAR LA LUNA ---
+        shader.Use();
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+
+        glm::mat4 modelMoon = glm::mat4(1.0f);
+        // Usamos posicionLuna calculada arriba
+        modelMoon = glm::translate(modelMoon, posicionLuna);
+        modelMoon = glm::scale(modelMoon, glm::vec3(0.1f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelMoon));
+        Luna.Draw(shader);
+
+        // --- 7. DIBUJAR EL SOL ---
+        glm::mat4 modelSun = glm::mat4(1.0f);
+        modelSun = glm::translate(modelSun, posicionSol);
+        modelSun = glm::scale(modelSun, glm::vec3(0.1f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelSun));
+        Sun1.Draw(shader);
 
         glBindVertexArray(0);
 
