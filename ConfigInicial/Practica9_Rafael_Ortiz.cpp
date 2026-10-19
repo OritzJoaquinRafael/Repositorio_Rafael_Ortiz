@@ -1,8 +1,8 @@
-// Practica 9
+// Práctica 9
 // Ortiz Valles Joaquin Rafael
-// Fecha de entrega: 14/10/2026
+// Fecha de entrega: 18/10/2026
 // Número de cuenta: 319071616
-//
+
 #include <iostream>
 #include <cmath>
 
@@ -44,17 +44,19 @@ GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
 bool firstMouse = true;
+
 // Light attributes
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 bool active;
+float movelightPos = 0.0f;
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
-	glm::vec3(-1.5f, 1.0f, 0.0f),    // Luz 0: Asignada a la Pelota (Arriba de la pelota)
-	glm::vec3(0.0f, 3.0f, 0.0f),     // Luz 1: Asignada al Perro (Justo sobre el perro)
-	glm::vec3(-15.0f, 2.0f, -6.5f),  // Luz 2: Asignada a la Ciudad 1
-	glm::vec3(11.0f, 2.0f, -6.0f),   // Luz 3: Asignada a la Ciudad 4
-	glm::vec3(-1.8f, 2.0f, -22.0f)   // Luz 4: Asignada a la Carretera (NUEVA LUZ)
+	glm::vec3(-15.0f, 2.0f, -6.5f),  // Luz 0: Ciudad 1
+	glm::vec3(11.0f, 2.0f, -28.0f),  // Luz 1: Ciudad 2
+	glm::vec3(-15.0f, 2.0f, -31.0f), // Luz 2: Ciudad 3
+	glm::vec3(11.0f, 2.0f, -6.0f),   // Luz 3: Ciudad 4
+	glm::vec3(0.0f, 4.0f, 0.0f)      // Luz 4: Farol blanco para el perro y la calle
 };
 
 float vertices[] = {
@@ -105,7 +107,6 @@ float vertices[] = {
 
 glm::vec3 Light1 = glm::vec3(0);
 
-
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
@@ -122,7 +123,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);*/
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Previo 9 - Ortiz Valles Joaquín Rafael", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 9 - Ortiz Valles Joaquin Rafael", nullptr, nullptr);
 
 	if (nullptr == window)
 	{
@@ -160,10 +161,6 @@ int main()
 	Shader lightingShader("Shader/lighting.vs", "Shader/lighting.frag");
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
 	
-	/*Model Dog((char*)"Models/RedDog.obj");
-	Model Piso((char*)"Models/piso.obj");
-	Model ball((char*)"Models/ball.obj");
-	Model bot((char*)"Models/botella.obj");*/
 
 	Model ball((char*)"Models/ball.obj");
 	Model dog((char*)"Models/RedDog.obj");
@@ -171,7 +168,6 @@ int main()
 	Model Ciu((char*)"Models/Residential Buildings 001.obj");
 	Model Road((char*)"Models/road.obj");
 	Model Ciu2((char*)"Models/Residential Buildings 002.obj");
-	Model Sun1((char*)"Models/Sun.obj");
 
 
 	// First, set the container's VAO (and VBO)
@@ -229,60 +225,71 @@ int main()
 		GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
 		glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
+		// --- MATEMÁTICA Y POSICIÓN DE LA LUNA ---
+		float radioLuna = 40.0f;
+		float lunaX = radioLuna * cos(movelightPos);
+		float lunaZ = radioLuna * sin(movelightPos);
+		float lunaY = 26.0f; // Altura en el cielo nocturno
+		glm::vec3 posicionLuna(lunaX, lunaY, lunaZ);
 
-		// Directional light
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), -0.2f, -1.0f, -0.3f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"),0.0f,0.0f,0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"),0.0f, 0.0f, 0.0f);
+		// --- LUZ DIRECCIONAL (LUZ DE LUNA) ---
+		glm::vec3 dirLuna = glm::normalize(-posicionLuna);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), dirLuna.x, dirLuna.y, dirLuna.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.05f, 0.08f, 0.15f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.15f, 0.2f, 0.35f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.2f, 0.2f, 0.4f);
 
-
-		// Point light 1
-	    glm::vec3 lightColor;
-		lightColor.x= abs(sin(glfwGetTime() *Light1.x));
-		lightColor.y= abs(sin(glfwGetTime() *Light1.y));
-		lightColor.z= sin(glfwGetTime() *Light1.z);
-
+		// Point light 0
+		glm::vec3 lightColor;
+		lightColor.x = abs(sin(glfwGetTime() * Light1.x));
+		lightColor.y = abs(sin(glfwGetTime() * Light1.y));
+		lightColor.z = sin(glfwGetTime() * Light1.z);
 		
+		//Luna
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.05f + (lightColor.x * 0.1f), 0.08f + (lightColor.y * 0.1f), 0.15f + (lightColor.z * 0.1f));
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.15f + lightColor.x, 0.2f + lightColor.y, 0.35f + lightColor.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.2f, 0.2f, 0.4f);
+
+		// Point light 0 (Ciudad 1 - Letrero Neón Cian / Moderno)
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), lightColor.x,lightColor.y, lightColor.z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), lightColor.x,lightColor.y,lightColor.z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 1.0f, 1.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), 0.0f, 0.05f, 0.05f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), 0.0f, 0.8f, 1.0f); // Luz Cian vibrante
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 0.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.045f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"),0.075f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.0075f);
 
-		// Point light 2
+		// Point light 1 (Ciudad 2 - Zona Residencial / Naranja Cálido)
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].ambient"), 0.0f, 0.0f, 0.02f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].diffuse"), 0.0f, 0.0f, 1.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].specular"), 0.0f, 0.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].ambient"), 0.05f, 0.02f, 0.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].diffuse"), 1.0f, 0.6f, 0.1f); // Naranja cálido (el original)
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].specular"), 1.0f, 0.8f, 0.2f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].linear"), 0.09f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].quadratic"), 0.032f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].linear"), 0.045f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].quadratic"), 0.0075f);
 
-		// Point light 3
+		// Point light 2 (Ciudad 3 - Edificio de Oficinas / Blanco Frío Fluorescente)
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].position"), pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].ambient"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].diffuse"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].specular"), 0.0f, 0.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].ambient"), 0.02f, 0.02f, 0.02f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].diffuse"), 0.8f, 0.9f, 1.0f); // Blanco con un toque muy ligero de azul
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].specular"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].linear"), 0.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].quadratic"), 0.0f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].linear"), 0.045f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].quadratic"), 0.0075f);
 
-		// Point light 4
+		// Point light 3 (Ciudad 4 - Vida Nocturna / Neón Magenta)
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[3].position"), pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[3].ambient"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[3].diffuse"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[3].specular"), 0.0f, 0.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[3].ambient"), 0.05f, 0.0f, 0.05f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[3].diffuse"), 0.8f, 0.2f, 1.0f); // Morado/Magenta
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[3].specular"), 1.0f, 0.5f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].linear"), 0.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].quadratic"), 0.0f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].linear"), 0.045f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].quadratic"), 0.0075f);
 
-		// Point light 5
+		// Point light 4 (Farol blanco para perro y carretera)
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[4].position"), pointLightPositions[4].x, pointLightPositions[4].y, pointLightPositions[4].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[4].ambient"), 0.05f, 0.05f, 0.05f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[4].diffuse"), 0.8f, 0.8f, 0.8f); // Luz blanca/gris
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[4].ambient"), 0.1f, 0.1f, 0.1f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[4].diffuse"), 0.9f, 0.9f, 0.8f); 
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[4].specular"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[4].constant"), 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[4].linear"), 0.09f);
@@ -329,7 +336,7 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
 		ball.Draw(lightingShader);
-		glDisable(GL_BLEND); // Se apaga inmediatamente para no afectar al resto
+		glDisable(GL_BLEND);
 		glBindVertexArray(0);
 
 		// 1. DIBUJAR PERRO
@@ -340,12 +347,12 @@ int main()
 		glBindVertexArray(VAO);
 		dog.Draw(lightingShader);
 
-		//// 2. DIBUJAR LUNA
-		//glm::mat4 model2(1.0f);
-		//model = glm::translate(model, lightPos + movelightPos);
-		//model = glm::scale(model, glm::vec3(0.3f));
-		//glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//Sun1.Draw(lightingShader);
+		// 2. DIBUJAR LUNA
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, posicionLuna);
+		model = glm::scale(model, glm::vec3(0.1f));
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		Luna.Draw(lightingShader);
 
 		// 3. DIBUJAR CIUDAD
 		model = glm::mat4(1.0f);
@@ -404,7 +411,7 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
 		// Draw the light object (using light's vertex attributes)
-		for (GLuint i = 0; i < 4; i++)
+		for (GLuint i = 0; i < 5; i++)
 		{
 			model = glm::mat4(1);
 			model = glm::translate(model, pointLightPositions[i]);
@@ -462,6 +469,8 @@ void DoMovement()
 
 	}
 
+	//Luces
+	
 	if (keys[GLFW_KEY_T])
 	{
 		pointLightPositions[0].x += 0.01f;
@@ -489,6 +498,31 @@ void DoMovement()
 		pointLightPositions[0].z += 0.01f;
 	}
 	
+	//Luna
+
+	if (keys[GLFW_KEY_O])
+	{
+		movelightPos += 0.009f;
+	}
+
+	if (keys[GLFW_KEY_L])
+	{
+		movelightPos -= 0.009f;
+	}
+
+	//Inicia el efecto
+	if (keys[GLFW_KEY_SPACE])
+	{
+		active = !active;
+		if (active)
+		{
+			Light1 = glm::vec3(1.0f, 1.0f, 0.0f); // Activa el color amarillo
+		}
+		else
+		{
+			Light1 = glm::vec3(0); // Apaga el efecto
+		}
+	}
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -536,7 +570,7 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 		}
 		else
 		{
-			Light1 = glm::vec3(0);//Cuado es solo un valor en los 3 vectores pueden dejar solo una componente
+			Light1 = glm::vec3(0);
 		}
 	}
 }
