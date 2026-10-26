@@ -2,6 +2,7 @@
 // Ortiz Valles Joaquin Rafael
 // Fecha de entrega: 25/10/2026
 // Número de cuenta: 319071616
+//Q
 
 #include <iostream>
 #include <cmath>
