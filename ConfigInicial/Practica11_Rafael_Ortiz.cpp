@@ -136,7 +136,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);*/
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Previo 11 - Joaquin Rafael Ortiz Valles", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 11 - Joaquin Rafael Ortiz Valles", nullptr, nullptr);
 
 	if (nullptr == window)
 	{
@@ -527,10 +527,11 @@ void Animation() {
 	float limitePisoZ = 2.3f;
 	float limitePisoX = 2.3f;
 
-	// CLAVE: 'static' mantiene el valor de la variable entre fotogramas sin reiniciarla a 0.0f
+	// CLAVE: Variables estáticas para mantener valores entre fotogramas
 	static float esperaTimer = 0.0f;
+	static bool cabezaGirada = false;
 
-	// ESTADO 1: Caminar hacia adelante (Eje Z)
+	// --- ESTADO 1: Caminar hacia adelante (Eje Z) ---
 	if (dogAnim == 1) {
 		if (dogPos.z < limitePisoZ) {
 			if (!step) {
@@ -544,24 +545,36 @@ void Animation() {
 			dogPos.z += 0.0006f;
 		}
 		else {
-			dogAnim = 2; // Pasa a girar hacia X
+			dogAnim = 2; 
 			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+			cabezaGirada = false; 
 		}
 	}
 
-	// ESTADO 2: Girar el cuerpo 90 grados hacia X
+	// --- ESTADO 2: Girar el cuerpo 90 grados hacia X ---
 	else if (dogAnim == 2) {
-		if (dogRot < 90.0f) {
-
-			dogRot += 0.05f; // Giro lento
+		if (!cabezaGirada) {
+			if (head < 60.0f) {
+				head += 0.3f; 
+			}
+			else {
+				cabezaGirada = true;
+			}
 		}
 		else {
-			dogRot = 90.0f;
-			dogAnim = 3; // Pasa a caminar en X
+			if (dogRot < 90.0f) {
+				dogRot += 0.05f;
+				if (head > 0.0f) head -= 0.03f; 
+			}
+			else {
+				dogRot = 90.0f;
+				head = 0.0f;
+				dogAnim = 3;
+			}
 		}
 	}
 
-	// ESTADO 3: Caminar hacia el borde de X
+	// --- ESTADO 3: Caminar hacia el borde de X ---
 	else if (dogAnim == 3) {
 		if (dogPos.x < limitePisoX) {
 			if (!step) {
@@ -575,23 +588,36 @@ void Animation() {
 			dogPos.x += 0.0006f;
 		}
 		else {
-			dogAnim = 4; // Pasa a girar hacia el origen (225 grados)
+			dogAnim = 4;
 			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+			cabezaGirada = false;
 		}
 	}
 
-	// ESTADO 4: Girar lentamente apuntando en diagonal al origen (225°)
+	// --- ESTADO 4: Girar apuntando en diagonal al origen (225°) ---
 	else if (dogAnim == 4) {
-		if (dogRot < 225.0f) {
-			dogRot += 0.05f;
+		if (!cabezaGirada) {
+			if (head < 60.0f) { 
+				head += 0.3f;
+			}
+			else {
+				cabezaGirada = true;
+			}
 		}
 		else {
-			dogRot = 225.0f;
-			dogAnim = 5; // Pasa a caminar en diagonal
+			if (dogRot < 225.0f) {
+				dogRot += 0.05f;
+				if (head > 0.0f) head -= 0.02f; 
+			}
+			else {
+				dogRot = 225.0f;
+				head = 0.0f;
+				dogAnim = 5;
+			}
 		}
 	}
 
-	// ESTADO 5: Caminar en diagonal de regreso al origen (0,0,0)
+	// --- ESTADO 5: Caminar en diagonal de regreso al origen (0,0,0) ---
 	else if (dogAnim == 5) {
 		if (dogPos.x > 0.0f && dogPos.z > 0.0f) {
 			if (!step) {
@@ -602,29 +628,27 @@ void Animation() {
 				RLegs -= 0.3f; FLegs -= 0.3f; head -= 0.3f; tail -= 0.3f;
 				if (RLegs < -15.0f) step = false;
 			}
-			// Decrementa simultáneamente X y Z para avanzar en diagonal
 			dogPos.x -= 0.0006f;
 			dogPos.z -= 0.0006f;
 		}
 		else {
-			// Llega al origen (0,0,0), detiene las patas y pasa a la pausa
 			dogPos.x = 0.0f;
 			dogPos.z = 0.0f;
 			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
-			esperaTimer = 0.0f; // Inicializa el temporizador en 0 al entrar al estado de pausa
-			dogAnim = 6; // Transición al estado de pausa
+			esperaTimer = 0.0f;
+			dogAnim = 6;
 		}
 	}
 
-	// ESTADO 6: Pausa de 1 segundo en el origen (0,0,0)
+	// --- ESTADO 6: Pausa de 1 segundo en el origen (0,0,0) ---
 	else if (dogAnim == 6) {
 		esperaTimer += deltaTime;
-		if (esperaTimer >= 1.0f) { // 1 segundo acumulado en tiempo real
-			dogAnim = 7; // Pasa a continuar su camino en diagonal
+		if (esperaTimer >= 1.0f) {
+			dogAnim = 7;
 		}
 	}
 
-	// ESTADO 7: Continuar en diagonal desde el centro hasta la esquina opuesta (-X, -Z)
+	// --- ESTADO 7: Continuar en diagonal hasta la esquina opuesta (-X, -Z) ---
 	else if (dogAnim == 7) {
 		if (dogPos.x > -limitePisoX && dogPos.z > -limitePisoZ) {
 			if (!step) {
@@ -635,14 +659,125 @@ void Animation() {
 				RLegs -= 0.3f; FLegs -= 0.3f; head -= 0.3f; tail -= 0.3f;
 				if (RLegs < -15.0f) step = false;
 			}
-			// Avanza en la misma orientación diagonal
 			dogPos.x -= 0.0006f;
 			dogPos.z -= 0.0006f;
 		}
 		else {
-			// Llega al borde de la esquina opuesta y finaliza la máquina de estados
-			dogAnim = 0;
+			dogAnim = 8;
 			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+			cabezaGirada = false;
+		}
+	}
+
+	// --- ESTADO 8: Girar apuntando hacia la derecha (90°) ---
+	else if (dogAnim == 8) {
+		if (!cabezaGirada) {
+			if (head > -60.0f) {
+				head -= 0.3f;
+			}
+			else {
+				cabezaGirada = true;
+			}
+		}
+		else {
+			if (dogRot > 90.0f) {
+				dogRot -= 0.05f;
+				if (head < 0.0f) head += 0.02f;
+			}
+			else {
+				dogRot = 90.0f;
+				head = 0.0f;
+				dogAnim = 9;
+			}
+		}
+	}
+
+	// --- ESTADO 9: Caminar hacia la esquina inferior derecha (+X, -Z) ---
+	else if (dogAnim == 9) {
+		if (dogPos.x < limitePisoX) {
+			if (!step) {
+				RLegs += 0.3f; FLegs += 0.3f; head += 0.3f; tail += 0.3f;
+				if (RLegs > 15.0f) step = true;
+			}
+			else {
+				RLegs -= 0.3f; FLegs -= 0.3f; head -= 0.3f; tail -= 0.3f;
+				if (RLegs < -15.0f) step = false;
+			}
+			dogPos.x += 0.0006f;
+		}
+		else {
+			dogAnim = 10;
+			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+			cabezaGirada = false;
+		}
+	}
+
+	// --- ESTADO 10: Girar apuntando al origen (-45°) ---
+	else if (dogAnim == 10) {
+		if (!cabezaGirada) {
+			if (head > -60.0f) { 
+				head -= 0.3f;
+			}
+			else {
+				cabezaGirada = true;
+			}
+		}
+		else {
+			if (dogRot > -45.0f) {
+				dogRot -= 0.05f;
+				if (head < 0.0f) head += 0.02f;
+			}
+			else {
+				dogRot = -45.0f;
+				head = 0.0f;
+				dogAnim = 11;
+			}
+		}
+	}
+
+	// --- ESTADO 11: Caminar en diagonal de regreso al origen (0,0,0) ---
+	else if (dogAnim == 11) {
+		if (dogPos.x > 0.0f && dogPos.z < 0.0f) {
+			if (!step) {
+				RLegs += 0.3f; FLegs += 0.3f; head += 0.3f; tail += 0.3f;
+				if (RLegs > 15.0f) step = true;
+			}
+			else {
+				RLegs -= 0.3f; FLegs -= 0.3f; head -= 0.3f; tail -= 0.3f;
+				if (RLegs < -15.0f) step = false;
+			}
+			dogPos.x -= 0.0006f;
+			dogPos.z += 0.0006f;
+		}
+		else {
+			dogPos.x = 0.0f;
+			dogPos.z = 0.0f;
+			dogAnim = 12;
+			RLegs = 0.0f; FLegs = 0.0f; head = 0.0f; tail = 0.0f;
+			cabezaGirada = false;
+		}
+	}
+
+	// --- ESTADO 12: Recuperar rotación original (0°) y apagar máquina ---
+	else if (dogAnim == 12) {
+		if (!cabezaGirada) {
+			if (head < 45.0f) {
+				head += 0.3f;
+			}
+			else {
+				cabezaGirada = true;
+			}
+		}
+		else {
+			if (dogRot < 0.0f) {
+				dogRot += 0.05f;
+				if (head > 0.0f) head -= 0.05f; 
+			}
+			else {
+				dogRot = 0.0f;
+				head = 0.0f;
+				dogAnim = 0; 
+			}
 		}
 	}
 }
