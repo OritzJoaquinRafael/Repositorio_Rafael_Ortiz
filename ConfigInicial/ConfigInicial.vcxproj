@@ -36,7 +36,7 @@
     <None Include="Shader\SkyBox.vs" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Practica12_Rafael_Ortiz.cpp" />
+    <ClCompile Include="skybox_Rafael_Ortiz.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
