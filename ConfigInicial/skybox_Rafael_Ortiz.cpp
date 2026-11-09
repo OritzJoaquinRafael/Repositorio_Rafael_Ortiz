@@ -2,6 +2,7 @@
 // Ortiz Valles Joaquin Rafael
 // Fecha de entrega: 08/11/2026
 // Número de cuenta: 319071616
+// Práctica 13
 
 #include <iostream>
 #include <cmath>
