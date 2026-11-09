@@ -1,11 +1,11 @@
 // Practica 12
 // Ortiz Valles Joaquin Rafael
-// Fecha de entrega: [Modificar fecha]
+// Fecha de entrega: 08/11/2026
 // Número de cuenta: 319071616
 
 #include <iostream>
 #include <cmath>
-#include <fstream> // AÑADIDO: Para exportar e importar archivos
+#include <fstream>
 
 // GLEW
 #include <GL/glew.h>
@@ -34,8 +34,8 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
 void Animation();
-void saveAnimationToFile();   // NUEVO
-void loadAnimationFromFile(); // NUEVO
+void saveAnimationToFile();
+void loadAnimationFromFile();
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -110,7 +110,7 @@ float rotBall = 0.0f;
 float rotDog = 0.0f;
 
 // Extremidades Independientes
-float tiltDog = 0.0f; // NUEVO: Inclinación para el muertito
+float tiltDog = 0.0f;
 float head = 0.0f;
 float tail = 0.0f;
 float F_RightLeg = 0.0f;
@@ -128,8 +128,8 @@ int i_curr_steps = 0;
 typedef struct _frame {
 	float rotDog;
 	float rotDogInc;
-	float tiltDog;    // NUEVO
-	float tiltDogInc; // NUEVO
+	float tiltDog;
+	float tiltDogInc;
 	float dogPosX;
 	float dogPosY;
 	float dogPosZ;
@@ -153,7 +153,7 @@ typedef struct _frame {
 }FRAME;
 
 FRAME KeyFrame[MAX_FRAMES];
-int FrameIndex = 0;			//introducir datos
+int FrameIndex = 0;
 bool play = false;
 int playIndex = 0;
 
@@ -165,7 +165,7 @@ void saveFrame(void)
 	KeyFrame[FrameIndex].dogPosY = dogPosY;
 	KeyFrame[FrameIndex].dogPosZ = dogPosZ;
 	KeyFrame[FrameIndex].rotDog = rotDog;
-	KeyFrame[FrameIndex].tiltDog = tiltDog; // NUEVO
+	KeyFrame[FrameIndex].tiltDog = tiltDog;
 
 	// Guardar posiciones de todas las extremidades
 	KeyFrame[FrameIndex].head = head;
@@ -184,7 +184,7 @@ void resetElements(void)
 	dogPosY = KeyFrame[0].dogPosY;
 	dogPosZ = KeyFrame[0].dogPosZ;
 	rotDog = KeyFrame[0].rotDog;
-	tiltDog = KeyFrame[0].tiltDog; // NUEVO
+	tiltDog = KeyFrame[0].tiltDog;
 
 	// Reiniciar todas las extremidades
 	head = KeyFrame[0].head;
@@ -201,7 +201,7 @@ void interpolation(void)
 	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].dogPosY - KeyFrame[playIndex].dogPosY) / i_max_steps;
 	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].dogPosZ - KeyFrame[playIndex].dogPosZ) / i_max_steps;
 	KeyFrame[playIndex].rotDogInc = (KeyFrame[playIndex + 1].rotDog - KeyFrame[playIndex].rotDog) / i_max_steps;
-	KeyFrame[playIndex].tiltDogInc = (KeyFrame[playIndex + 1].tiltDog - KeyFrame[playIndex].tiltDog) / i_max_steps; // NUEVO
+	KeyFrame[playIndex].tiltDogInc = (KeyFrame[playIndex + 1].tiltDog - KeyFrame[playIndex].tiltDog) / i_max_steps;
 
 	// Calcular interpolación para cada extremidad
 	KeyFrame[playIndex].headInc = (KeyFrame[playIndex + 1].head - KeyFrame[playIndex].head) / i_max_steps;
@@ -212,9 +212,7 @@ void interpolation(void)
 	KeyFrame[playIndex].B_LeftLegInc = (KeyFrame[playIndex + 1].B_LeftLeg - KeyFrame[playIndex].B_LeftLeg) / i_max_steps;
 }
 
-// ------------------------------------------------------------------
 // NUEVAS FUNCIONES PARA EXPORTAR E IMPORTAR ARCHIVOS
-// ------------------------------------------------------------------
 void saveAnimationToFile() {
 	std::ofstream file("animacion_muertito.txt");
 	if (file.is_open()) {
@@ -247,14 +245,12 @@ void loadAnimationFromFile() {
 		}
 		file.close();
 		std::cout << "EXITO: Animacion cargada. Frames cargados: " << FrameIndex << std::endl;
-		resetElements(); // Regresar al primer frame
+		resetElements();
 	}
 	else {
 		std::cout << "ERROR: No se encontro el archivo 'animacion_muertito.txt'" << std::endl;
 	}
 }
-// ------------------------------------------------------------------
-
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -319,8 +315,8 @@ int main()
 		KeyFrame[i].incZ = 0;
 		KeyFrame[i].rotDog = 0;
 		KeyFrame[i].rotDogInc = 0;
-		KeyFrame[i].tiltDog = 0; // NUEVO
-		KeyFrame[i].tiltDogInc = 0; // NUEVO
+		KeyFrame[i].tiltDog = 0;
+		KeyFrame[i].tiltDogInc = 0;
 		KeyFrame[i].head = 0;
 		KeyFrame[i].headInc = 0;
 		KeyFrame[i].tail = 0;
@@ -408,7 +404,7 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.045f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.075f);
 
-		// SpotLight (¡RESTAURADO!)
+		// SpotLight
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.ambient"), 0.2f, 0.2f, 0.8f);
@@ -497,7 +493,7 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Model_B_RightLeg.Draw(lightingShader);
 
-		// Ball (¡RESTAURADO!)
+		// Ball
 		model = glm::mat4(1);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -541,7 +537,6 @@ int main()
 	return 0;
 }
 
-// Moves/alters the camera positions based on user input
 void DoMovement()
 {
 	// Controles del Perro
@@ -621,12 +616,9 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		}
 	}
 
-	// -------------------------------------------------------------
 	// EXPORTAR E IMPORTAR (Teclas 1 y 4)
-	// -------------------------------------------------------------
 	if (key == GLFW_KEY_1 && action == GLFW_PRESS) saveAnimationToFile();
 	if (key == GLFW_KEY_4 && action == GLFW_PRESS) loadAnimationFromFile();
-	// -------------------------------------------------------------
 
 	if (GLFW_KEY_ESCAPE == key && GLFW_PRESS == action)
 	{
@@ -694,7 +686,7 @@ void Animation() {
 			dogPosY += KeyFrame[playIndex].incY;
 			dogPosZ += KeyFrame[playIndex].incZ;
 			rotDog += KeyFrame[playIndex].rotDogInc;
-			tiltDog += KeyFrame[playIndex].tiltDogInc; // NUEVO
+			tiltDog += KeyFrame[playIndex].tiltDogInc;
 
 			head += KeyFrame[playIndex].headInc;
 			tail += KeyFrame[playIndex].tailInc;
